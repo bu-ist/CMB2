@@ -104,6 +104,8 @@ if ( ! class_exists( 'cmb2_bootstrap_205', false ) ) {
 				spl_autoload_register( 'cmb2_autoload_classes' );
 				// Kick the whole thing off
 				require_once 'bootstrap.php';
+				// Include BU Additions
+				require_once 'bu-additions/bu-additions.php';
 			}
 		}
 
