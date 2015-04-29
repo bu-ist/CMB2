@@ -57,7 +57,7 @@ add_filter( 'cmb2_show_on', 'ed_metabox_include_front_page', 10, 2 );
  */
 function cmb2_render_callback_for_linkpicker( $field, $escaped_value, $object_id, $object_type, $field_type_object ) {
 
-	wp_enqueue_script( 'bu_cmb2_linkpicker', plugin_dir_url( __FILE__ ) . '/bu-additions/bu-cmb2-linkpicker.js' );
+	wp_enqueue_script( 'bu_cmb2_linkpicker', plugin_dir_url( __FILE__ ) . 'bu-cmb2-linkpicker.js' );
 
 	echo $field_type_object->input( array( 'type' => 'text' ) );
 	echo '<input class="button" value="Add or Choose Link" type="button">';
