@@ -70,54 +70,70 @@ add_action( 'cmb2_render_linkpicker', 'cmb2_render_callback_for_linkpicker', 10,
 /**
  * 03. Setting Limits on Repeatables
  * Set a max limit on the number of times a repeating group can be added.
- * Modified from @link https://github.com/WebDevStudios/CMB2-Snippet-Library/blob/master/javascript/limit-number-of-repeat-groups.php
+ * @link https://github.com/WebDevStudios/CMB2-Snippet-Library/blob/master/javascript/limit-number-of-repeat-groups.php
  */
 
 function js_limit_group_repeat( $cmb_id, $object_id ) {
 	$cmb = CMB2_Boxes::get( $cmb_id );
 
-	$fields = reset( $cmb->prop( 'fields' ) );
-	$fields_id = $fields[ 'id' ];
-	$type = $fields[ 'type' ];
-	$options = $fields [ 'options' ];
-	$limit = $options[ 'rows_limit' ];
-	if( $type == 'group' && $limit ){
-		$element = $fields_id . '_repeat';
-		?>
-		<script type="text/javascript">
-		jQuery(document).ready(function($){
-			var limit		= <?php echo $limit; ?>;
-			var element		= <?php echo $element; ?>;
+	echo("<pre>");
 
-			var countRows = function() {
-				return $(element).find( '> .cmb-row.cmb-repeatable-grouping' ).length;
-			};
-			var disableAdder = function() {
-				$(element).find('.cmb-add-group-row.button').prop( 'disabled', true );
-			};
-			var enableAdder = function() {
-				$(element).find('.cmb-add-group-row.button').prop( 'disabled', false );
-			};
+	/*
+		TODO:
+			Turn this into a foreach to loop over the fields
+			instead of assuming there's just one
+	*/
+	$fields = $cmb->prop( 'fields' );
+	foreach( $fields as $field ){
+		$field_id = $field[ 'id' ];
+		$type = $field[ 'type' ];
+		$options = $field [ 'options' ];
+		$limit = $options[ 'rows_limit' ];
 
-			if ( countRows() >= limit ) {
-				disableAdder();
-			}
+		if( $type == 'group' && $limit ){
+			$element = $field_id . '_repeat';
+			?>
+			<script type="text/javascript">
+			jQuery(document).ready(function($){
+				var limit = <?php echo $limit; ?>;
+				var element	= <?php echo $element; ?>;
 
-			$(element)
-				.on( 'cmb2_add_row', function() {
-					if ( countRows() >= limit ) {
-						disableAdder();
-					}
-				})
-				.on( 'cmb2_remove_row', function() {
-					if ( countRows() < limit ) {
-						enableAdder();
-					}
-				});
-		});
-		</script>
+				var countRows = function( ) {
+					return $(element).find( '> .cmb-row.cmb-repeatable-grouping' ).length;
+				};
+
+				var disableAdder = function( ) {
+					$(element).find('.cmb-add-group-row.button').prop( 'disabled', true );
+				};
+
+				var enableAdder = function( ) {
+					$(element).find('.cmb-add-group-row.button').prop( 'disabled', false );
+				};
+
+				if ( countRows() >= limit ) {
+					disableAdder();
+				}
+
+				$(element)
+					.on( 'cmb2_add_row', function() {
+						if ( countRows() >= limit ) {
+							disableAdder();
+						}
+					})
+					.on( 'cmb2_remove_row', function() {
+						if ( countRows() < limit ) {
+							enableAdder();
+						}
+					});
+			});
+			</script>
 		<?php
+		}
 	}
 
 }
 add_action( 'cmb2_after_form', 'js_limit_group_repeat', 10, 2 );
+
+
+
+include_once( 'bu-post-chooser.php' );
