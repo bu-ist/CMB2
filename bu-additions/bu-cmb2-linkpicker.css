@@ -1,0 +1,11 @@
+/**
+ * Styles for CMB2 Linkpicker
+ */
+
+.cmb-type-linkpicker .cmb2-add-link,
+.cmb-type-linkpicker .cmb2-remove-link {
+	vertical-align: baseline;
+}
+.cmb-type-linkpicker .cmb2-remove-link {
+	margin-left: 12px;
+}

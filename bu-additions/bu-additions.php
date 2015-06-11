@@ -58,9 +58,11 @@ add_filter( 'cmb2_show_on', 'ed_metabox_include_front_page', 10, 2 );
 function cmb2_render_callback_for_linkpicker( $field, $escaped_value, $object_id, $object_type, $field_type_object ) {
 
 	wp_enqueue_script( 'bu_cmb2_linkpicker', plugin_dir_url( __FILE__ ) . 'bu-cmb2-linkpicker.js' );
+	wp_enqueue_style( 'bu_cmb2_linkpicker', plugin_dir_url( __FILE__ ) . 'bu-cmb2-linkpicker.css', array() );
 
 	echo $field_type_object->input( array( 'type' => 'text' ) );
-	echo '<input class="button" value="Add or Choose Link" type="button">';
+	echo '<input class="button cmb2-add-link" value="Add or Choose Link" type="button">';
+	echo '<a href="#" class="cmb2-remove-link" value="Remove Link">Remove</a>';
 }
 add_action( 'cmb2_render_linkpicker', 'cmb2_render_callback_for_linkpicker', 10, 5 );
 
