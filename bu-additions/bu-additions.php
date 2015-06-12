@@ -4,6 +4,7 @@
  * 01. Filter to include metabox on front page
  * 02. Custom Field Type: Linkpicker
  * 03. Setting limits on Repeatables
+ * 04. Post Chooser
  */
 
 
@@ -16,7 +17,7 @@
  * @param array $meta_box
  * @return bool display metabox
  *
- * Usage: 'show_on' => array( 'key' => 'front-page', 'value' => '' )
+ * Usage: 'show_on' => array( 'key' => 'front-page' )
  */
 
 function ed_metabox_include_front_page( $display, $meta_box ) {
@@ -78,13 +79,6 @@ add_action( 'cmb2_render_linkpicker', 'cmb2_render_callback_for_linkpicker', 10,
 function js_limit_group_repeat( $cmb_id, $object_id ) {
 	$cmb = CMB2_Boxes::get( $cmb_id );
 
-	echo("<pre>");
-
-	/*
-		TODO:
-			Turn this into a foreach to loop over the fields
-			instead of assuming there's just one
-	*/
 	$fields = $cmb->prop( 'fields' );
 	foreach( $fields as $field ){
 		$field_id = $field[ 'id' ];
@@ -137,5 +131,7 @@ function js_limit_group_repeat( $cmb_id, $object_id ) {
 add_action( 'cmb2_after_form', 'js_limit_group_repeat', 10, 2 );
 
 
-
+/**
+ * 04. Post Chooser
+ */
 include_once( 'bu-post-chooser.php' );

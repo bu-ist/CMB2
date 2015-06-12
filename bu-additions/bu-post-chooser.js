@@ -108,12 +108,9 @@ jQuery( function($) {
 		this.$typeahead.val('');
 		this.clearSelection();
 
-		// Conditionally show "Remove" section based on target request
-		if ( this.$target.hasClass( 'dim' ) ) {
-			this.$removeSelection.show();
-		}else {
-			this.$removeSelection.hide();
-		}
+		// Show "Remove" section
+		this.$removeSelection.show();
+
 	}
 
 	ObjectSelectorModal.prototype.resetDropdown = function () {
@@ -145,7 +142,6 @@ jQuery( function($) {
 
 	ObjectSelectorModal.prototype.onConfirmSelection = function (e) {
 		e.preventDefault();
-		console.log(this.$target);
 		this.$target.addClass( 'changed' );
 
 		// Update target values to reflect current selection state
@@ -156,6 +152,7 @@ jQuery( function($) {
 	}
 
 	ObjectSelectorModal.prototype.onRemoveSelection = function (e) {
+		e.preventDefault();
 		this.$target.addClass( 'changed' );
 
 		// Update target values to reflect empty selection

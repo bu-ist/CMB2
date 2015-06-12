@@ -14,7 +14,6 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 		In:
 			Options
 				post_types - array
-				query_override - array
 
 		Out:
 			cmb2 input (hidden) - to store the data
@@ -24,16 +23,9 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 		Front:
 			Enqueue typeahead
 			Enqueue postchooser script (button click, post selected, hidden input change)
-			Enqueue styles?
-
-			<input class="regular-text selection-id" name="_r_urop_post_chooser" id="_r_urop_post_chooser" value="37" type="hidden">
-
-
-
-
+			Enqueue styles
 	*/
 
-	//wp_enqueue_script( 'bu_cmb2_linkpicker', plugin_dir_url( __FILE__ ) . 'bu-cmb2-linkpicker.js' );
 	$options = $field->args[ 'options' ];
 	$given_id = $field->args[ 'id' ];
 	$group_id = $given_id . '_group';
@@ -47,7 +39,7 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 	<?php
 
 	// Modal UI for story, resource and topic selection
-	echo( bu_post_chooser_object_selector_modal( $group_id,    'post',     array( 'post_type' => array( 'post' ) ) ) );
+	echo( bu_post_chooser_object_selector_modal( $group_id, 'post', array( 'post_type' => array( 'post' ) ) ) );
 
 
 }
@@ -110,9 +102,6 @@ function bu_post_chooser_object_selector_modal( $id, $object_type = 'post', arra
 		</div>
 	</div> <!-- /#<?php echo $id; ?> -->
 <?php
-
-	//wp_enqueue_style( 'object-selector' );
-	//wp_enqueue_script( 'object-selector' );
 }
 
 
@@ -121,37 +110,23 @@ function bu_post_chooser_object_selector_modal( $id, $object_type = 'post', arra
  */
 function bu_post_chooser_object_selector_get_objects( $object_type, array $args ) {
 	$defaults = array(
-		'post_type' => array( 'post' ),
-		'taxonomies' => array( 'category' )
+		'post_type' => array( 'post' )
 	);
 	$args = wp_parse_args( $args, $defaults );
 	$objects = array();
 
-	switch ( $object_type ) {
-		case 'post':
-			$query_args = array(
-				'post_type'      => $args['post_type'],
-				'posts_per_page' => -1,
-				'orderby'        => 'date',
-				'order'          => 'desc'
-				);
-			$objects = get_posts( $query_args );
+	$query_args = array(
+		'post_type'			=> $args['post_type'],
+		'posts_per_page'		=> -1,
+		'orderby'			=> 'date',
+		'order'				=> 'desc'
+		);
+	$objects = get_posts( $query_args );
 
-			// Format post objects for typeahead
-			$objects = array_map( function( $post ) {
-				return array( 'name' => $post->post_title, 'id' => $post->ID );
-			}, $objects );
-
-			break;
-		case 'taxonomy':
-			$objects = get_terms( $args['taxonomies'], array( 'hide_empty' => false ) );
-
-			// Format term objects for typeahead
-			$objects = array_map( function( $term ) {
-				return array( 'name' => $term->name, 'id' => $term->term_id );
-			}, $objects );
-			break;
-	}
+	// Format post objects for typeahead
+	$objects = array_map( function( $post ) {
+		return array( 'name' => $post->post_title, 'id' => $post->ID );
+	}, $objects );
 
 	return $objects;
 }
