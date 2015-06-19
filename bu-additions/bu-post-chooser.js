@@ -4,13 +4,13 @@
 
 jQuery( function($) {
 
-	// Store all object selector modal instances here
+	// Store all post chooser modal instances here
 	var modals = {};
 
 	/**
-	 * Encapsulates the object selection modal interface.
+	 * Encapsulates the post chooser modal interface.
 	 */
-	var ObjectSelectorModal = function(id) {
+	var PostChooserModal = function(id) {
 		this.id  = id;
 
 		// Cache a reference to the modal DOM element
@@ -27,17 +27,17 @@ jQuery( function($) {
 	};
 
 	/**
-	 * Loads objects from a global defined in `object-selector.php`.
-	 * @global burObjects
+	 * Loads objects from a global defined in `bu-post-chooser.php`.
+	 * @global cmbuObjects
 	 */
-	ObjectSelectorModal.prototype.loadObjects = function () {
-		this.objects = window.burObjects[this.id];
+	PostChooserModal.prototype.loadObjects = function () {
+		this.objects = window.cmbuObjects[this.id];
 	}
 
 	/**
 	 * Initializes DOM elements for this instance.
 	 */
-	ObjectSelectorModal.prototype.setupControls = function () {
+	PostChooserModal.prototype.setupControls = function () {
 
 		// Use Bloodhound as typeahead data source
 		var bloodhound = new Bloodhound({
@@ -71,7 +71,7 @@ jQuery( function($) {
 		this.$removeBtn = this.$( '.remove-selection' );
 	}
 
-	ObjectSelectorModal.prototype.attachHandlers = function() {
+	PostChooserModal.prototype.attachHandlers = function() {
 		// Post selection
 		this.$dropdown.on( 'change', $.proxy( this.onDropdownSelect, this ) );
 		this.$typeahead.on( 'typeahead:selected typeahead:autocompleted', $.proxy( this.onTypeaheadSelect, this ) );
@@ -81,27 +81,27 @@ jQuery( function($) {
 		this.$removeBtn.on( 'click', $.proxy( this.onRemoveSelection, this ) );
 	}
 
-	ObjectSelectorModal.prototype.clearSelection = function () {
+	PostChooserModal.prototype.clearSelection = function () {
 		this.$currentSelectionInput.val( '' );
 		this.$currentSelectionLabel.text( '' );
 
 		this.$currentSelection.hide();
 	}
 
-	ObjectSelectorModal.prototype.selectObject = function (object) {
+	PostChooserModal.prototype.selectObject = function (object) {
 		this.$currentSelectionInput.val( object.id );
 		this.$currentSelectionLabel.text( object.name );
 
 		this.$currentSelection.show();
 	}
 
-	ObjectSelectorModal.prototype.setTarget = function ( $target ) {
+	PostChooserModal.prototype.setTarget = function ( $target ) {
 		this.$target = $target;
 
 		this.resetState();
 	}
 
-	ObjectSelectorModal.prototype.resetState = function () {
+	PostChooserModal.prototype.resetState = function () {
 
 		// Reset selection state
 		this.$dropdown.prop( 'selectedIndex', 0 );
@@ -113,11 +113,11 @@ jQuery( function($) {
 
 	}
 
-	ObjectSelectorModal.prototype.resetDropdown = function () {
+	PostChooserModal.prototype.resetDropdown = function () {
 		this.$dropdown.prop( 'selectedIndex', 0 );
 	}
 
-	ObjectSelectorModal.prototype.onDropdownSelect = function (e) {
+	PostChooserModal.prototype.onDropdownSelect = function (e) {
 		var object = {};
 
 		// Object was selected (first option is blank)
@@ -135,12 +135,12 @@ jQuery( function($) {
 		}
 	}
 
-	ObjectSelectorModal.prototype.onTypeaheadSelect = function (e, selection) {
+	PostChooserModal.prototype.onTypeaheadSelect = function (e, selection) {
 		this.selectObject({name: selection.value, id: selection.id });
 		this.resetDropdown();
 	}
 
-	ObjectSelectorModal.prototype.onConfirmSelection = function (e) {
+	PostChooserModal.prototype.onConfirmSelection = function (e) {
 		e.preventDefault();
 		this.$target.addClass( 'changed' );
 
@@ -151,7 +151,7 @@ jQuery( function($) {
 		self.parent.tb_remove();
 	}
 
-	ObjectSelectorModal.prototype.onRemoveSelection = function (e) {
+	PostChooserModal.prototype.onRemoveSelection = function (e) {
 		e.preventDefault();
 		this.$target.addClass( 'changed' );
 
@@ -163,16 +163,16 @@ jQuery( function($) {
 	}
 
 	// Create modal instances
-	$( '.object-selector-modal' ).each( function() {
+	$( '.post-chooser-modal' ).each( function() {
 		var $modal  = $( this ),
 			id      = $modal.attr('id');
 
-		modals[id] = new ObjectSelectorModal(id);
+		modals[id] = new PostChooserModal(id);
 	});
 
 	// Listen for opening of post selection modals
-	$( '.select-object' ).on( 'click', function () {
-		var $target = $( this ).closest( '.object-selector-group' ),
+	$( '.select-post' ).on( 'click', function () {
+		var $target = $( this ).closest( '.post-chooser-group' ),
 			modalId = $target.data( 'selectorId' );
 
 		// Set the modal target

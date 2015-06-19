@@ -30,8 +30,8 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 	$given_id = $field->args[ 'id' ];
 	$group_id = $given_id . '_group';
 	?>
-	<div class="object-selector-group" data-selector-id="<?php echo( $group_id ); ?>">
-		<a class="thickbox select-object" href="#TB_inline?width=600&height=550&inlineId=<?php echo( $group_id ); ?>">
+	<div class="post-chooser-group" data-selector-id="<?php echo( $group_id ); ?>">
+		<a class="thickbox select-post" href="#TB_inline?width=600&height=550&inlineId=<?php echo( $group_id ); ?>">
 			<span class="selection-title"><?php echo( ( $escaped_value ) ? get_the_title( $escaped_value ) : '[Select New]' ); ?></span>
 		</a>
 		<?php echo $field_type_object->input( array( 'type' => 'hidden', 'class' => 'regular-text selection-id' ) ); ?>
@@ -39,7 +39,7 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 	<?php
 
 	// Modal UI for story, resource and topic selection
-	echo( bu_post_chooser_object_selector_modal( $group_id, 'post', array( 'post_type' => array( 'post' ) ) ) );
+	echo( bu_post_chooser_modal( $group_id, 'post', array( 'post_type' => array( 'post' ) ) ) );
 
 
 }
@@ -55,8 +55,8 @@ add_action( 'cmb2_render_postchooser', 'cmb2_render_callback_for_postchooser', 1
  */
 
 
-function bu_post_chooser_object_selector_modal( $id, $object_type = 'post', array $args = array() ) {
-	$objects = bu_post_chooser_object_selector_get_objects( $object_type, $args );
+function bu_post_chooser_modal( $id, $object_type = 'post', array $args = array() ) {
+	$objects = bu_post_chooser_get_objects( $object_type, $args );
 
 	if ( empty( $objects ) ) {
 		return;
@@ -73,7 +73,7 @@ function bu_post_chooser_object_selector_modal( $id, $object_type = 'post', arra
 	echo "<script type='text/javascript'>var burObjects = window.burObjects || {}; burObjects['". $id . "'] = " . json_encode( $objects ) . ';</script>';
 
 ?>
-	<div id="<?php echo esc_attr( $id ); ?>" class="object-selector-modal">
+	<div id="<?php echo esc_attr( $id ); ?>" class="post-chooser-modal">
 		<div id="<?php echo esc_attr( $id ); ?>-inner">
 			<h2>Pick from the latest posts:</h2>
 			<select class="choose-dropdown">
@@ -108,7 +108,7 @@ function bu_post_chooser_object_selector_modal( $id, $object_type = 'post', arra
 /**
  * Returns a list of objects formatted for typeahead display.
  */
-function bu_post_chooser_object_selector_get_objects( $object_type, array $args ) {
+function bu_post_chooser_get_objects( $object_type, array $args ) {
 	$defaults = array(
 		'post_type' => array( 'post' )
 	);
@@ -133,9 +133,9 @@ function bu_post_chooser_object_selector_get_objects( $object_type, array $args 
 
 
 function bu_post_chooser_scripts() {
-	wp_enqueue_style( 'object-selector', plugin_dir_url( __FILE__ ) . 'bu-post-chooser.css', array() );
+	wp_enqueue_style( 'post-chooser', plugin_dir_url( __FILE__ ) . 'bu-post-chooser.css', array() );
 	wp_enqueue_script( 'typeahead', plugin_dir_url( __FILE__ ) . 'typeahead.bundle.min.js', array( 'jquery' ), '0.10.4' );
-	wp_enqueue_script( 'object-selector', plugin_dir_url( __FILE__ ) . 'bu-post-chooser.js', array( 'jquery', 'typeahead' ) );
+	wp_enqueue_script( 'post-chooser', plugin_dir_url( __FILE__ ) . 'bu-post-chooser.js', array( 'jquery', 'typeahead' ) );
 }
 
 add_action( 'admin_enqueue_scripts', 'bu_post_chooser_scripts' );
