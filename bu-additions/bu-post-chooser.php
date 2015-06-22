@@ -70,7 +70,7 @@ function bu_post_chooser_modal( $id, $object_type = 'post', array $args = array(
 	}
 
 	// Make the rest available for the typeahead script
-	echo "<script type='text/javascript'>var burObjects = window.burObjects || {}; burObjects['". $id . "'] = " . json_encode( $objects ) . ';</script>';
+	echo "<script type='text/javascript'>var cmbuObjects = window.cmbuObjects || {}; cmbuObjects['". $id . "'] = " . json_encode( $objects ) . ';</script>';
 
 ?>
 	<div id="<?php echo esc_attr( $id ); ?>" class="post-chooser-modal">
