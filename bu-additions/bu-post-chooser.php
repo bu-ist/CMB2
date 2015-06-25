@@ -29,6 +29,7 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 	$options = $field->args[ 'options' ];
 	$given_id = $field->args[ 'id' ];
 	$group_id = $given_id . '_group';
+	$post_types = array( 'post' );
 	?>
 	<div class="post-chooser-group" data-selector-id="<?php echo( $group_id ); ?>">
 		<a class="thickbox select-post" href="#TB_inline?width=600&height=550&inlineId=<?php echo( $group_id ); ?>">
@@ -38,8 +39,11 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 	</div>
 	<?php
 
+	if( $options['post_types'] ){
+		$post_types = $options['post_types'];
+	}
 	// Modal UI for story, resource and topic selection
-	echo( bu_post_chooser_modal( $group_id, 'post', array( 'post_type' => array( 'post' ) ) ) );
+	echo( bu_post_chooser_modal( $group_id, 'post', array( 'post_type' => $post_types ) ) );
 
 
 }
