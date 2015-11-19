@@ -30,6 +30,9 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 	$given_id = $field->args[ 'id' ];
 	$group_id = $given_id . '_group';
 	$post_types = array( 'post' );
+	if( $options['post_types'] ){
+		$post_types = $options['post_types'];
+	}
 	?>
 	<div class="post-chooser-group" data-selector-id="<?php echo( $group_id ); ?>">
 		<a class="thickbox select-post" href="#TB_inline?width=600&height=550&inlineId=<?php echo( $group_id ); ?>">
@@ -38,12 +41,8 @@ function cmb2_render_callback_for_postchooser( $field, $escaped_value, $object_i
 		<?php echo $field_type_object->input( array( 'type' => 'hidden', 'class' => 'regular-text selection-id' ) ); ?>
 	</div>
 	<?php
-
-	if( $options['post_types'] ){
-		$post_types = $options['post_types'];
-	}
 	// Modal UI for story, resource and topic selection
-	echo( bu_post_chooser_modal( $group_id, 'post', array( 'post_type' => $post_types ) ) );
+	echo( bu_post_chooser_modal( $group_id, $post_types ) );
 
 
 }
@@ -59,8 +58,8 @@ add_action( 'cmb2_render_postchooser', 'cmb2_render_callback_for_postchooser', 1
  */
 
 
-function bu_post_chooser_modal( $id, $object_type = 'post', array $args = array() ) {
-	$objects = bu_post_chooser_get_objects( $object_type, $args );
+function bu_post_chooser_modal( $id, $object_type ) {
+	$objects = bu_post_chooser_get_objects( $object_type );
 
 	if ( empty( $objects ) ) {
 		return;
@@ -112,15 +111,12 @@ function bu_post_chooser_modal( $id, $object_type = 'post', array $args = array(
 /**
  * Returns a list of objects formatted for typeahead display.
  */
-function bu_post_chooser_get_objects( $object_type, array $args ) {
-	$defaults = array(
-		'post_type' => array( 'post' )
-	);
-	$args = wp_parse_args( $args, $defaults );
+function bu_post_chooser_get_objects( $object_types ) {
+
 	$objects = array();
 
 	$query_args = array(
-		'post_type'			=> $args['post_type'],
+		'post_type'			=> $object_types,
 		'posts_per_page'		=> -1,
 		'orderby'			=> 'date',
 		'order'				=> 'desc'
